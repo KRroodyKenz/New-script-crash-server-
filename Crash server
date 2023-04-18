@@ -1,0 +1,28 @@
+lua
+repeat
+    task.wait()
+until game:IsLoaded();
+
+game:GetService("ReplicatedStorage").HDAdminClient.Signals.RequestCommand:InvokeServer(";btools")
+
+for i = 1, 2500 do
+    task.spawn(function()
+        game.Players.LocalPlayer.Backpack["Building Tools"].SyncAPI.ServerEndpoint:InvokeServer("CreatePart", "Normal", CFrame.new(-3, 50, 70), workspace);
+    end);
+end;
+
+task.wait(1);
+
+local parts = {};
+
+for i, v in next, workspace:GetChildren() do
+    if v:IsA("Part") then
+        parts[#parts + 1] = { 
+            ["Part"] = v, ["Anchored"] = false 
+        }
+    end
+end
+
+game.Players.LocalPlayer.Backpack["Building Tools"].SyncAPI.ServerEndpoint:InvokeServer("SyncAnchor", parts);
+
+print("done");
